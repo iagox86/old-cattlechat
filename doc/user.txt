@@ -1,0 +1,127 @@
+Ron Bowes
+6793026
+74.406 Project
+
+                      Cattle Chat
+                     Users' Guide
+
+INTODUCTION
+
+ This is the user guide for Cattle Chat.  I'm going to explain how
+ to use the program from a user's perspective, as well as explain 
+ how I implemented the requested features. 
+
+
+COMPILING/INSTALLING
+
+ I have confirmed that Cattle Chat compiles and runs successfully 
+ on antares.cc.umanitoba.ca (SunOS), the Linux lab (bird) systems
+ (Fedora), and my own laptop (Slackware).  I suspect it will work
+ on any modern Linux/Unix,  provided that they have SSL insalled,
+ since I use that for hashing the password.
+
+ To compile on Linux, type (without the $ sign):
+  $ make
+ To compile on SunOS or Solaris, type:
+  $ make -f Makefile.sun
+
+ There are a couple warnings, due to non-standard function usage
+ (such as vsnprintf), but I wanted to use those functions anyway
+ because they're safer. 
+
+ This program can't be installed.  This is a school project, and
+ there is no reason to install it. 
+
+
+RUNNING - SERVER
+
+ To run the server, type ./server <port>, where <port>'s the port
+ desired.   There's no way to fork it into the background at this
+ point,  but since it is just a school assignment there's no real
+ harm in leaving it up. 
+
+RUNNING - CLIENT
+
+ To run the client, type ./client. It will prompt for the desired
+ server, port, username, password, and initial channel. I realize
+ that this doesn't sync up with the instructions, I found that it
+ was a little cleaner to do it this way  (just press enter a lot,
+ and it will use all the defaults).  
+
+ Before entering the name of the channel, the client program will
+ automatically send a UDP request to the server to get a list  of
+ all known channels. If the UDP request is unsuccessful, then the
+ client will shut down.   The UDP request has 3 seconds before it
+ times out.
+
+USAGE
+
+ In this section, I'll go over the commands that we were asked to 
+ deliver.   It should be noted that I opted not to use  numerical 
+ IDs for the chatrooms, instead they have names.  
+
+ help -- Type /help to get a list of commands, or /help <command>
+  for help on a specific command. I added some commands that were
+  not in the specification, so be sure to look!
+
+ login -- Logging in is done implicitely when connecting.  I hope
+  that's not issue,  but I thought it was far more clean doing it
+  that way. 
+
+ who -- Type /who to get a list of all users or /who <channel> to
+  get a list of users in that channel. 
+
+ yell -- This is done implicitely when a message is typed.   Just
+  type a message and hit enter, no need to hell.  
+
+ tell -- Type  /tell <user> <message>  to send somebody a private
+  message.  Note that if the user has a space in his name,  it is 
+  impossible to send them a message in this way.  Consider that a
+  feature, they don't want to be bugged. :)
+
+ bye -- Type /bye.  This is really hacked together,  the best way 
+  to exit by far is control-c. 
+
+ newroom -- Type /newroom <room>; if the room already exists,  it
+  joins it instead of creating it.   This command is  implicitely
+  an alias for /join. 
+
+ member -- Type /member <room>; this command is actually an alias
+  for /who. 
+
+ join -- Type /join <room>. If the room doesn't exist, it will be
+  created (this command is the same as /newroom)
+
+ logout -- Just use /bye for this. 
+
+
+NUMBER OF ROOMS
+
+ The instructions ask to indicate how many concurrent rooms  this 
+ server can support.  It can support an unlimited amount of rooms
+ provided that the server hasenough memory and processing  speed.
+ It is assumed that there won't be a considerable amount of users
+ logged in at the same time,  though,  because if there are, some
+ commands will take a lot of time to run (like /who).  
+
+ It should also be noted that I  implemented chatrooms differently
+ than indicated in the specification.  The rooms are a part of the
+ server,  stored in a linked list,  they aren't separate instances
+ of my step 1 code. When a user logs on, they are logged on in any
+ room they're in, and a private message can be passed to them just
+ by their name.  
+
+
+IN and OUT
+
+ I didn't explicitly define IN and OUT; however, the user can be in
+ 0 or 1 chatrooms.  Running /join or /newroom with a blank parameter
+ leaves chat, effectively going into an OUT state.  All commands
+ should work in both IN and OUT, to some degree of effectiveness. 
+ 
+CONCLUSION
+
+ That's pretty much all the important stuff to keep in mind.  For
+ information on how the server is programmed, please see the     
+ develope guide. 
+ 
